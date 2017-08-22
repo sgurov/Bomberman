@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts.BaseClasses
 {
-    public abstract class CharacterBase : MonoBehaviour
+    public abstract class CharacterBase : NetworkBehaviour
     {
         protected int speed = (int)Enums.Speed.Normal;
         protected Animator animator;

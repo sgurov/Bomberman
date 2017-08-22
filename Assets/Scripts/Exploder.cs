@@ -6,24 +6,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts
 {
     public static class Exploder
     {
-        public static IEnumerator Explode(GameObject explosionSource, float explosionDelay, float explosionDistance,
-            Action<RaycastHit[]> callBack)
+        public static IEnumerator Explode(PlayerBase playerBehavior, GameObject explosionSource, 
+            float explosionDelay, float explosionDistance, Action<RaycastHit[]> callBack)
         {
             yield return new WaitForSeconds(explosionDelay);
             DynamicObjectsGeneratorBase dynamicObjects = ObjectsCreator.GetDynamicObjects();
             GameObject explosion = dynamicObjects.GetExplosion();
             GameObject gameObject = UnityEngine.Object.Instantiate(explosion, explosionSource.transform.position, 
                 Quaternion.identity);
+            if (playerBehavior.isClient)
+            {
+                CmdSpawnExplosion(gameObject, explosionSource.transform.position);
+            }
             GameObject.Destroy(explosionSource);
             RaycastHit[] rayCastHits = GetHits(explosionSource, explosionDistance);
             callBack(rayCastHits);
             yield return new WaitForSeconds(explosionDelay);
             GameObject.Destroy(gameObject);
+        }
+
+        [Command]
+
+        private static void CmdSpawnExplosion(GameObject explosion, Vector3 position)
+        {
+            UnityEngine.Object.Instantiate(explosion, position, Quaternion.identity);
+            
+            NetworkServer.Spawn(explosion);
+            
         }
 
         private static RaycastHit[] GetHits(GameObject bomb, float distance)

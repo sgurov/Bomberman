@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts
 {
@@ -16,7 +17,6 @@ namespace Assets.Scripts
         private GameObject concreteWall, floor, brickWall;
         private GameObject player, enemy;
         private GameObject[] powerups;
-        private int[,] fieldMatrix;
 
         void Start()
         {
@@ -24,8 +24,8 @@ namespace Assets.Scripts
 
             GenerateGameField();
 
-            AddPlayerToField();
-            AddEnemyToField();
+            //AddPlayerToField();
+            //AddEnemyToField();
         }
 
         void Update()
@@ -37,8 +37,8 @@ namespace Assets.Scripts
             GenerateFloor();
             GenerateBorders();
             GenerateConcreteWalls();
-            GenerateBrickWalls();
-            GeneratePowerups();
+            //GenerateBrickWalls();
+            //GeneratePowerups();
         }
 
         private void GenerateBorders()
@@ -56,8 +56,9 @@ namespace Assets.Scripts
                     if (i % 2 != 0 && j % 2 != 0)
                     {
                         Vector3 position = new Vector3(i, wallOffset, j);
-                        Instantiate(concreteWall, position, Quaternion.identity);
-                        fieldMatrix[i, j] = (int)Enums.FieldState.Filled;
+                        var gameObject = Instantiate(concreteWall, position, Quaternion.identity);
+                        NetworkServer.Spawn(gameObject);
+                        GameFieldManager.fieldMatrix[i, j] = (int)Enums.FieldState.Filled;
                     }
                 }
             }
@@ -69,7 +70,8 @@ namespace Assets.Scripts
             {
                 for (int j = -1; j < rowCount + 1; j++)
                 {
-                    Instantiate(floor, new Vector3(i, 0.0f, j), Quaternion.identity);
+                    var gameObject = Instantiate(floor, new Vector3(i, 0.0f, j), Quaternion.identity);
+                    NetworkServer.Spawn(gameObject);
                 }
             }
         }
@@ -85,11 +87,13 @@ namespace Assets.Scripts
                     int row = random.Next(0, rowCount);
                     int column = random.Next(0, columnCount);
 
-                    if (!IsConcreteWall(row, column) && fieldMatrix[column, row] == (int)Enums.FieldState.Empty)
+                    if (!IsConcreteWall(row, column) && GameFieldManager.fieldMatrix[column, row] == 
+                        (int)Enums.FieldState.Empty)
                     {
-                        Instantiate(brickWall, new Vector3(column, wallOffset, row),
+                        var gameObject = Instantiate(brickWall, new Vector3(column, wallOffset, row),
                             Quaternion.identity);
-                        fieldMatrix[column, row] = (int)Enums.FieldState.Filled;
+                        NetworkServer.Spawn(gameObject);
+                        GameFieldManager.fieldMatrix[column, row] = (int)Enums.FieldState.Filled;
                         break;
                     }
                 }
@@ -101,10 +105,12 @@ namespace Assets.Scripts
             for (int i = -1; i < columnCount + 1; i++)
             {
                 Vector3 position = new Vector3(i, wallOffset, -1);
-                Instantiate(concreteWall, position, Quaternion.identity);
+                var gameObject = Instantiate(concreteWall, position, Quaternion.identity);
+                NetworkServer.Spawn(gameObject);
 
                 position = new Vector3(i, wallOffset, rowCount);
-                Instantiate(concreteWall, position, Quaternion.identity);
+                gameObject = Instantiate(concreteWall, position, Quaternion.identity);
+                NetworkServer.Spawn(gameObject);
             }
         }
 
@@ -113,10 +119,12 @@ namespace Assets.Scripts
             for (int i = -1; i < rowCount + 1; i++)
             {
                 Vector3 position = new Vector3(-1, wallOffset, i);
-                Instantiate(concreteWall, position, Quaternion.identity);
+                var gameObject = Instantiate(concreteWall, position, Quaternion.identity);
+                NetworkServer.Spawn(gameObject);
 
                 position = new Vector3(columnCount, wallOffset, i);
-                Instantiate(concreteWall, position, Quaternion.identity);
+                gameObject = Instantiate(concreteWall, position, Quaternion.identity);
+                NetworkServer.Spawn(gameObject);
             }
         }
 
@@ -131,9 +139,12 @@ namespace Assets.Scripts
                     int row = random.Next(0, rowCount);
                     int column = random.Next(0, columnCount);
 
-                    if (!IsConcreteWall(row, column) && fieldMatrix[column, row] == (int)Enums.FieldState.Filled)
+                    if (!IsConcreteWall(row, column) && GameFieldManager.fieldMatrix[column, row] == 
+                        (int)Enums.FieldState.Filled)
                     {
-                        Instantiate(powerup, new Vector3(column, wallOffset, row), Quaternion.identity);
+                        var gameObject = Instantiate(powerup, new Vector3(column, wallOffset, row), 
+                            Quaternion.identity);
+                        NetworkServer.Spawn(gameObject);
                         break;
                     }
                 }
@@ -147,14 +158,15 @@ namespace Assets.Scripts
 
         private void AddPlayerToField()
         {
-            Vector3 position = GeneratePlayerPosition();
+            Vector3 position = GameFieldManager.GeneratePlayerPosition();
             //Vector3 position = new Vector3(0.0f, 0.0f, 0.0f);
 
             player = dynamicObjects.GetPlayer();
 
             //position.y += player.transform.lossyScale.y;
 
-            Instantiate(player, position, Quaternion.identity);
+            var gameObject = Instantiate(player, position, Quaternion.identity);
+            NetworkServer.Spawn(gameObject);
         }
 
         private void AddEnemyToField()
@@ -163,25 +175,9 @@ namespace Assets.Scripts
             enemy = dynamicObjects.GetEnemy();
             //Vector3 position = new Vector3(columnCount - 1, 0.0f, rowCount - 1);
             //position.y += enemy.transform.lossyScale.y;
-            Instantiate(enemy, position, Quaternion.identity);
+            var gameObject = Instantiate(enemy, position, Quaternion.identity);
+            NetworkServer.Spawn(gameObject);
             
-        }
-
-        private Vector3 GeneratePlayerPosition()
-        {
-            System.Random random = new System.Random();
-
-            while (true)
-            {
-                int column = random.Next(0, columnCount);
-                int row = random.Next(0, rowCount);
-
-                if (fieldMatrix[column, row] == (int)Enums.FieldState.Empty)
-                {
-                    fieldMatrix[column, row] = (int)Enums.FieldState.Player;
-                    return new Vector3(column, 0.0f, row);
-                }
-            }
         }
 
         private Vector3 GenerateEnemyPosition()
@@ -193,13 +189,13 @@ namespace Assets.Scripts
                 int column = random.Next(0, columnCount);
                 int row = random.Next(0, rowCount);
 
-                if (fieldMatrix[column, row] == (int)Enums.FieldState.Empty)
+                if (GameFieldManager.fieldMatrix[column, row] == (int)Enums.FieldState.Empty)
                 {
                     Vector3 position = new Vector3(column, 0.0f, row); 
 
                     //position.y += enemy.transform.lossyScale.y;
 
-                    fieldMatrix[column, row] = (int)Enums.FieldState.Enemy;
+                    GameFieldManager.fieldMatrix[column, row] = (int)Enums.FieldState.Enemy;
                     return position;
 
                 }
@@ -210,8 +206,6 @@ namespace Assets.Scripts
         {
             staticObjects = ObjectsCreator.GetStaticObjects();
             dynamicObjects = ObjectsCreator.GetDynamicObjects();
-
-            fieldMatrix = new int[columnCount, rowCount];
 
             floor = staticObjects.GetFloor();
             concreteWall = staticObjects.GetConcreteWall();

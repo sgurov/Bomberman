@@ -13,18 +13,24 @@ namespace Assets.Scripts
     public class PlayerController : PlayerBase
     {
         private ICharacterBehavior characterBehavior;
-
+        
         protected override void Start()
         {
             base.Start();
             characterBehavior = new SimpleKeyboardMove();
+            transform.position = GameFieldManager.GeneratePlayerPosition();
         }
 
         private void Update()
         {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                if (GetBombs() > 0)
+                if (GetBombs() > 0 && !dead)
                 {
                     DropBomb();
                     animator.SetTrigger("DropBomb");
@@ -35,6 +41,11 @@ namespace Assets.Scripts
 
         void FixedUpdate()
         {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+
             if (!dead)
             {
                 Vector3 position = transform.position;

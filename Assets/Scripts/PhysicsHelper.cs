@@ -33,18 +33,18 @@ namespace Assets.Scripts
             return Vector3.zero;
         }
 
-        public static void Rotate(MonoBehaviour gameObjectBehavior, Vector3 vector3, Enums.TypeOfVector3 typeOfVector)
+        public static void Rotate(MonoBehaviour gameObjectBehavior, Vector3 direction, Enums.TypeOfVector3 typeOfVector)
         {
             switch (typeOfVector)
             {
                 case Enums.TypeOfVector3.Direction:
-                    if (vector3 != Vector3.zero)
+                    if (direction != Vector3.zero)
                     {
-                        gameObjectBehavior.transform.rotation = Quaternion.LookRotation(vector3);
+                        gameObjectBehavior.transform.rotation = Quaternion.LookRotation(direction);
                     }
                     break;
                 case Enums.TypeOfVector3.NextPosition:
-                    gameObjectBehavior.transform.LookAt(vector3);
+                    gameObjectBehavior.transform.LookAt(direction);
                     break;
             }
         }
@@ -88,8 +88,8 @@ namespace Assets.Scripts
 
         public static bool CharacterSphereCast(MonoBehaviour gameObjectBehavior)
         {
-            float radius = 0.45f;
-            float castDistance = 0.1f;
+            float radius = 0.3f;
+            float castDistance = 0.2f;
             int mask = (1 << 2);
             RaycastHit rayCastHit;
 
@@ -109,8 +109,8 @@ namespace Assets.Scripts
 
         public static bool CharacterSphereCast(MonoBehaviour gameObjectBehavior, Vector3 direction)
         {
-            float radius = 0.45f;
-            float castDistance = 0.1f;
+            float radius = 0.3f;
+            float castDistance = 0.2f;
             int mask = (1 << 2);
             RaycastHit rayCastHit;
 

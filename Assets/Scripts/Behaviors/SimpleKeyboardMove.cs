@@ -61,19 +61,19 @@ namespace Assets.Scripts
 
             PhysicsHelper.Rotate(gameObjectBehavior, direction, Enums.TypeOfVector3.Direction);
 
-            if (!IsBorder(gameObjectBehavior.transform.position, direction))
-            {
+            //if (!IsBorder(gameObjectBehavior.transform.position, direction))
+            //{
                 if (wallPass)
                 {
-                    //gameObjectBehavior.transform.Translate(direction * Time.deltaTime * speed, Space.World);
-                    gameObjectBehavior.transform.position += direction * Time.deltaTime * speed;
+                    gameObjectBehavior.transform.Translate(direction * Time.deltaTime * speed, Space.World);
+                    //gameObjectBehavior.transform.position += direction * Time.deltaTime * speed;
                 }
                 else if (!PhysicsHelper.CharacterSphereCast(gameObjectBehavior))
                 {
-                    //gameObjectBehavior.transform.Translate(direction * Time.deltaTime * speed, Space.World);
-                    gameObjectBehavior.transform.position += direction * Time.deltaTime * speed;
+                    gameObjectBehavior.transform.Translate(direction * Time.deltaTime * speed, Space.World);
+                    //gameObjectBehavior.transform.position += direction * Time.deltaTime * speed;
                 }
-            }
+            //}
         }
     }
 }

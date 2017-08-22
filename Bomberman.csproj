@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.1.0f3</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -96,16 +94,19 @@
     <Compile Include="Assets\Scripts\Behaviors\SimpleKeyboardMove.cs" />
     <Compile Include="Assets\Scripts\Common\AdvancedDynamicObjectsGenerator.cs" />
     <Compile Include="Assets\Scripts\Common\DynamicObjectsGenerator.cs" />
+    <Compile Include="Assets\Scripts\Common\GameFieldManager.cs" />
     <Compile Include="Assets\Scripts\Common\ObjectsCreator.cs" />
     <Compile Include="Assets\Scripts\Common\StaticObjectsGenerator.cs" />
     <Compile Include="Assets\Scripts\Controllers\EnemyController.cs" />
     <Compile Include="Assets\Scripts\Controllers\IntelligentEnemyController.cs" />
+    <Compile Include="Assets\Scripts\Controllers\NetworkPlayerController.cs" />
     <Compile Include="Assets\Scripts\Controllers\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Controllers\PowerupController.cs" />
     <Compile Include="Assets\Scripts\Enums.cs" />
     <Compile Include="Assets\Scripts\Exploder.cs" />
     <Compile Include="Assets\Scripts\GameField.cs" />
     <Compile Include="Assets\Scripts\Helper.cs" />
+    <Compile Include="Assets\Scripts\NetworkGameStarter.cs" />
     <Compile Include="Assets\Scripts\PhysicsHelper.cs" />
   </ItemGroup>
   <ItemGroup>

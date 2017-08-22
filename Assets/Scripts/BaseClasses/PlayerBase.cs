@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts
 {
@@ -106,7 +107,13 @@ namespace Assets.Scripts
             Vector3 position = transform.position;
             position.y = bombRadius;
             GameObject bombObject = Instantiate(bomb, position, Quaternion.identity) as GameObject;
-            StartCoroutine(Exploder.Explode(bombObject, explosionDelay, GetExplosionDistance(),
+
+            if (isServer)
+            {
+                NetworkServer.Spawn(bombObject);
+            }
+
+            StartCoroutine(Exploder.Explode(this, bombObject, explosionDelay, GetExplosionDistance(),
                 DestroyExplodedObjects));
         }
 
