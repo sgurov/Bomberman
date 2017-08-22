@@ -7,9 +7,10 @@ using UnityEngine;
 
 public class PowerupController : MonoBehaviour
 {
-    private StaticObjectsGeneratorBase staticObjects;
+    private DynamicObjectsGeneratorBase dynamicObjects;
     private Canvas bombsPowerupInfo, flamesPowerupInfo, speedPowerupInfo, wallpassPowerupInfo;
     private float delaySeconds = 2.0f;
+
     // Use this for initialization
     void Start ()
     {
@@ -24,23 +25,26 @@ public class PowerupController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        string powerup = gameObject.name;
+        if (other.gameObject.tag == "Player")
+        {
+            string powerup = gameObject.name;
 
-        if (name.Contains("Speed"))
-        {
-            ShowPowerupInfo(speedPowerupInfo, delaySeconds);
-        }
-        else if (name.Contains("Bombs"))
-        {
-            ShowPowerupInfo(bombsPowerupInfo, delaySeconds);
-        }
-        else if (name.Contains("Flames"))
-        {
-            ShowPowerupInfo(flamesPowerupInfo, delaySeconds);
-        }
-        else if (name.Contains("WallPass"))
-        {
-            ShowPowerupInfo(wallpassPowerupInfo, delaySeconds);
+            if (name.Contains("Speed"))
+            {
+                ShowPowerupInfo(speedPowerupInfo, delaySeconds);
+            }
+            else if (name.Contains("Bombs"))
+            {
+                ShowPowerupInfo(bombsPowerupInfo, delaySeconds);
+            }
+            else if (name.Contains("Flames"))
+            {
+                ShowPowerupInfo(flamesPowerupInfo, delaySeconds);
+            }
+            else if (name.Contains("WallPass"))
+            {
+                ShowPowerupInfo(wallpassPowerupInfo, delaySeconds);
+            }
         }
     }
 
@@ -57,11 +61,11 @@ public class PowerupController : MonoBehaviour
 
     private void Initialize()
     {
-        staticObjects = ObjectsCreator.GetStaticObjects();
+        dynamicObjects = ObjectsCreator.GetDynamicObjects();
 
-        bombsPowerupInfo = staticObjects.GetBombsImage();
-        flamesPowerupInfo = staticObjects.GetFlamesImage();
-        speedPowerupInfo = staticObjects.GetSpeedImage();
-        wallpassPowerupInfo = staticObjects.GetWallpassImage();
+        bombsPowerupInfo = dynamicObjects.GetBombsImage();
+        flamesPowerupInfo = dynamicObjects.GetFlamesImage();
+        speedPowerupInfo = dynamicObjects.GetSpeedImage();
+        wallpassPowerupInfo = dynamicObjects.GetWallpassImage();
     }
 }

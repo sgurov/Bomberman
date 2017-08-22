@@ -12,42 +12,36 @@ namespace Assets.Scripts
         private int speed;
         private bool wallPass;
         private Vector3 direction;
+        private Animator animator;
 
         public bool CanMove(CharacterBase gameObjectBehavior)
         {
-            direction = Helper.GetDirectionByKeyboard();
+            if (Input.GetKey(KeyCode.Space) && gameObjectBehavior.GetBombs() > 0)
+                return false;
+
+            direction = PhysicsHelper.GetDirectionByKeyboard();
 
             return direction != Vector3.zero;
         }
 
         public void Move(CharacterBase gameObjectBehavior)
         {
+            animator = gameObjectBehavior.gameObject.GetComponent<Animator>();
             if (CanMove(gameObjectBehavior))
             {
+                speed = gameObjectBehavior.GetSpeed();
+                animator.SetFloat("Speed", speed);
                 RotateAndMove(gameObjectBehavior);
             }
-        }
-
-        private Vector3 GetMaxPosition()
-        {
-            GameObject[] concreteWalls = GameObject.FindGameObjectsWithTag("Concrete");
-            float x = concreteWalls[0].transform.position.x;
-            float z = concreteWalls[0].transform.position.z;
-
-            foreach (var wall in concreteWalls)
+            else
             {
-                if (wall.transform.position.x > x)
-                    x = wall.transform.position.x;
-                if (wall.transform.position.z > z)
-                    z = wall.transform.position.z;
+                animator.SetFloat("Speed", 0.0f);
             }
-
-            return new Vector3(x, 0.0f, z);
         }
 
         private bool IsBorder(Vector3 position, Vector3 direction)
         {
-            Vector3 maxPosition = GetMaxPosition();
+            Vector3 maxPosition = Helper.GetMaxPosition();
 
             if (position.x <= 0 && direction == Vector3.left)
                 return true;
@@ -63,21 +57,22 @@ namespace Assets.Scripts
 
         private void RotateAndMove(CharacterBase gameObjectBehavior)
         {
-            speed = gameObjectBehavior.GetSpeed();
             wallPass = gameObjectBehavior.CanWallPass();
 
-            Helper.Rotate(gameObjectBehavior, direction, Helper.TypeOfVector3.Direction);
+            PhysicsHelper.Rotate(gameObjectBehavior, direction, Enums.TypeOfVector3.Direction);
 
-            if (!wallPass)
+            if (!IsBorder(gameObjectBehavior.transform.position, direction))
             {
-                if (!Helper.CharacterCapsuleCast(gameObjectBehavior))
+                if (wallPass)
                 {
-                    gameObjectBehavior.transform.Translate(direction * Time.deltaTime * speed, Space.World);
+                    //gameObjectBehavior.transform.Translate(direction * Time.deltaTime * speed, Space.World);
+                    gameObjectBehavior.transform.position += direction * Time.deltaTime * speed;
                 }
-            }
-            else if (!IsBorder(gameObjectBehavior.transform.position, direction))
-            {
-                gameObjectBehavior.transform.Translate(direction * Time.deltaTime * speed, Space.World);
+                else if (!PhysicsHelper.CharacterSphereCast(gameObjectBehavior))
+                {
+                    //gameObjectBehavior.transform.Translate(direction * Time.deltaTime * speed, Space.World);
+                    gameObjectBehavior.transform.position += direction * Time.deltaTime * speed;
+                }
             }
         }
     }

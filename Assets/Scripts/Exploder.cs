@@ -15,8 +15,8 @@ namespace Assets.Scripts
             Action<RaycastHit[]> callBack)
         {
             yield return new WaitForSeconds(explosionDelay);
-            StaticObjectsGeneratorBase staticObjects = ObjectsCreator.GetStaticObjects();
-            GameObject explosion = staticObjects.GetExplosion();
+            DynamicObjectsGeneratorBase dynamicObjects = ObjectsCreator.GetDynamicObjects();
+            GameObject explosion = dynamicObjects.GetExplosion();
             GameObject gameObject = UnityEngine.Object.Instantiate(explosion, explosionSource.transform.position, 
                 Quaternion.identity);
             GameObject.Destroy(explosionSource);

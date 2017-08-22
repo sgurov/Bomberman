@@ -10,5 +10,12 @@ namespace Assets.Scripts.BaseClasses
     {
         public abstract GameObject GetPlayer();
         public abstract GameObject GetEnemy();
+        public abstract GameObject GetBomb();
+        public abstract GameObject GetExplosion();
+        public abstract Canvas GetGameOverText();
+        public abstract Canvas GetSpeedImage();
+        public abstract Canvas GetBombsImage();
+        public abstract Canvas GetFlamesImage();
+        public abstract Canvas GetWallpassImage();
     }
 }

@@ -11,13 +11,6 @@ namespace Assets.Scripts.BaseClasses
         public abstract GameObject GetConcreteWall();
         public abstract GameObject GetBrickWall();
         public abstract GameObject GetFloor();
-        public abstract Canvas GetCanvas();
-        public abstract GameObject GetBomb();
-        public abstract GameObject GetExplosion();
         public abstract GameObject[] GetPowerups();
-        public abstract Canvas GetSpeedImage();
-        public abstract Canvas GetBombsImage();
-        public abstract Canvas GetFlamesImage();
-        public abstract Canvas GetWallpassImage();
     }
 }

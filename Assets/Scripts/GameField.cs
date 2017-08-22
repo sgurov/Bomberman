@@ -25,7 +25,7 @@ namespace Assets.Scripts
             GenerateGameField();
 
             AddPlayerToField();
-            //AddEnemyToField();
+            AddEnemyToField();
         }
 
         void Update()
@@ -57,7 +57,7 @@ namespace Assets.Scripts
                     {
                         Vector3 position = new Vector3(i, wallOffset, j);
                         Instantiate(concreteWall, position, Quaternion.identity);
-                        fieldMatrix[i, j] = (int)FieldState.Filled;
+                        fieldMatrix[i, j] = (int)Enums.FieldState.Filled;
                     }
                 }
             }
@@ -85,11 +85,11 @@ namespace Assets.Scripts
                     int row = random.Next(0, rowCount);
                     int column = random.Next(0, columnCount);
 
-                    if (!IsConcreteWall(row, column) && fieldMatrix[column, row] == (int)FieldState.Empty)
+                    if (!IsConcreteWall(row, column) && fieldMatrix[column, row] == (int)Enums.FieldState.Empty)
                     {
                         Instantiate(brickWall, new Vector3(column, wallOffset, row),
                             Quaternion.identity);
-                        fieldMatrix[column, row] = (int)FieldState.Filled;
+                        fieldMatrix[column, row] = (int)Enums.FieldState.Filled;
                         break;
                     }
                 }
@@ -131,7 +131,7 @@ namespace Assets.Scripts
                     int row = random.Next(0, rowCount);
                     int column = random.Next(0, columnCount);
 
-                    if (!IsConcreteWall(row, column) && fieldMatrix[column, row] == (int)FieldState.Filled)
+                    if (!IsConcreteWall(row, column) && fieldMatrix[column, row] == (int)Enums.FieldState.Filled)
                     {
                         Instantiate(powerup, new Vector3(column, wallOffset, row), Quaternion.identity);
                         break;
@@ -152,35 +152,19 @@ namespace Assets.Scripts
 
             player = dynamicObjects.GetPlayer();
 
-            position.y += player.transform.lossyScale.y;
+            //position.y += player.transform.lossyScale.y;
 
             Instantiate(player, position, Quaternion.identity);
         }
 
         private void AddEnemyToField()
         {
-            System.Random random = new System.Random();
-
-            while (true)
-            {
-                int column = random.Next(0, columnCount);
-                int row = random.Next(0, rowCount);
-
-                if (fieldMatrix[column, row] == (int)FieldState.Empty)
-                {
-                    Vector3 position = new Vector3(column, 0.0f, row);
-
-
-                    enemy = dynamicObjects.GetEnemy();
-
-                    position.y += enemy.transform.lossyScale.y;
-
-                    Instantiate(enemy, position, Quaternion.identity);
-                    fieldMatrix[column, row] = (int)FieldState.Enemy;
-                    break;
-
-                }
-            }
+            Vector3 position = GenerateEnemyPosition();
+            enemy = dynamicObjects.GetEnemy();
+            //Vector3 position = new Vector3(columnCount - 1, 0.0f, rowCount - 1);
+            //position.y += enemy.transform.lossyScale.y;
+            Instantiate(enemy, position, Quaternion.identity);
+            
         }
 
         private Vector3 GeneratePlayerPosition()
@@ -192,10 +176,32 @@ namespace Assets.Scripts
                 int column = random.Next(0, columnCount);
                 int row = random.Next(0, rowCount);
 
-                if (fieldMatrix[column, row] == (int)FieldState.Empty)
+                if (fieldMatrix[column, row] == (int)Enums.FieldState.Empty)
                 {
-                    fieldMatrix[column, row] = (int)FieldState.Player;
+                    fieldMatrix[column, row] = (int)Enums.FieldState.Player;
                     return new Vector3(column, 0.0f, row);
+                }
+            }
+        }
+
+        private Vector3 GenerateEnemyPosition()
+        {
+            System.Random random = new System.Random();
+
+            while (true)
+            {
+                int column = random.Next(0, columnCount);
+                int row = random.Next(0, rowCount);
+
+                if (fieldMatrix[column, row] == (int)Enums.FieldState.Empty)
+                {
+                    Vector3 position = new Vector3(column, 0.0f, row); 
+
+                    //position.y += enemy.transform.lossyScale.y;
+
+                    fieldMatrix[column, row] = (int)Enums.FieldState.Enemy;
+                    return position;
+
                 }
             }
         }
@@ -212,13 +218,5 @@ namespace Assets.Scripts
             brickWall = staticObjects.GetBrickWall();
             powerups = staticObjects.GetPowerups();
         }
-
-        private enum FieldState
-        {
-            Empty = 0,
-            Filled = 1,
-            Player = 2,
-            Enemy = 3
-        };
     }
 }

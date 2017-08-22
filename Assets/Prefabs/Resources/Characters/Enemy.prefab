@@ -21,10 +21,10 @@ GameObject:
   - component: {fileID: 4325792382867666}
   - component: {fileID: 33778734560629382}
   - component: {fileID: 23366113459864254}
-  - component: {fileID: 114537127088633984}
-  - component: {fileID: 143047135051470880}
   - component: {fileID: 54786893652602368}
-  m_Layer: 0
+  - component: {fileID: 114537127088633984}
+  - component: {fileID: 114270033375986116}
+  m_Layer: 2
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 33420262924565836}
   - component: {fileID: 136963659963179014}
   - component: {fileID: 23387994125149562}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: RightEye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,7 +60,7 @@ GameObject:
   - component: {fileID: 33622538459950108}
   - component: {fileID: 135851049018404134}
   - component: {fileID: 23044552121859856}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Hat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,7 +78,7 @@ GameObject:
   - component: {fileID: 33311067233325944}
   - component: {fileID: 136507748405227276}
   - component: {fileID: 23651059185097194}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: LeftEye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -311,13 +311,24 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &114537127088633984
+--- !u!114 &114270033375986116
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1092954492879038}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 785ece7dff5e40a42a0e28863893fb48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114537127088633984
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1092954492879038}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 86d013082b5b8d449b51e29b12aca1bc, type: 3}
   m_Name: 
@@ -359,21 +370,4 @@ CapsuleCollider:
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!143 &143047135051470880
-CharacterController:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1092954492879038}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}

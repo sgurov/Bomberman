@@ -15,7 +15,7 @@ namespace Assets.Scripts.Common
 
         public static DynamicObjectsGeneratorBase GetDynamicObjects()
         {
-            return new DynamicObjectsGenerator();
+            return new AdvancedDynamicObjectsGenerator();
         }
     }
 }

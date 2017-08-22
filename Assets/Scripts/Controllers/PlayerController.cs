@@ -10,13 +10,13 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public class PlayerController : Player
+    public class PlayerController : PlayerBase
     {
         private ICharacterBehavior characterBehavior;
-        private float explosionDelay = 2.0f;
 
-        void Start()
+        protected override void Start()
         {
+            base.Start();
             characterBehavior = new SimpleKeyboardMove();
         }
 
@@ -27,6 +27,7 @@ namespace Assets.Scripts
                 if (GetBombs() > 0)
                 {
                     DropBomb();
+                    animator.SetTrigger("DropBomb");
                     ReduceBombsCount();
                 }
             }
@@ -34,16 +35,24 @@ namespace Assets.Scripts
 
         void FixedUpdate()
         {
-            characterBehavior.Move(this);
+            if (!dead)
+            {
+                Vector3 position = transform.position;
+                position.y = 0;
+                transform.position = position;
+                characterBehavior.Move(this);
+            }
         }
 
-        private void OnTriggerEnter(Collider other)
+        protected override void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.tag == "Powerup")
+            base.OnTriggerEnter(other);
+
+            if (other.gameObject.tag == "Enemy")
             {
-                AddPowerup(other.gameObject);
-                other.gameObject.SetActive(false);
-                SetPlayerPowerups();
+                animator.SetFloat("Speed", 0);
+                dead = true;
+                StartCoroutine(DoDie());
             }
         }
 
@@ -52,34 +61,20 @@ namespace Assets.Scripts
             //Time.timeScale = 0;
         }
 
-        private void DropBomb()
+        private IEnumerator DoDie()
         {
-            StaticObjectsGeneratorBase staticObjectsGenerator = ObjectsCreator.GetStaticObjects();
-
-            GameObject bomb = staticObjectsGenerator.GetBomb();
-            Vector3 position = transform.position;
-            position.y = 0.5f;
-            GameObject bombObject = Instantiate(bomb, position, Quaternion.identity) as GameObject;
-            StartCoroutine(Exploder.Explode(bombObject, explosionDelay, GetExplosionDistance(), DestroyExplodedObjects));
+            yield return new WaitForSeconds(1);
+            animator.SetTrigger("Death");
         }
 
-        private void DestroyExplodedObjects(RaycastHit[] objects)
+        protected override void PlayStepSound()
         {
-            foreach (var item in objects)
-            {
-                switch (item.transform.tag)
-                {
-                    case "Player":
-                        GameObject.Destroy(item.transform.gameObject);
-                        break;
-                    case "Enemy":
-                        GameObject.Destroy(item.transform.gameObject);
-                        break;
-                    case "Brick":
-                        GameObject.Destroy(item.transform.gameObject);
-                        break;
-                }
-            }
+            base.PlayStepSound();
+        }
+
+        protected override void PlayDeathSound()
+        {
+            base.PlayDeathSound();
         }
     }
 }

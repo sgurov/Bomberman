@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts;
+using Assets.Scripts.Algorithms;
 using Assets.Scripts.BaseClasses;
 using Assets.Scripts.Behaviors;
 using System.Collections;
@@ -6,25 +7,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EnemyController : Enemy
+public class EnemyController : EnemyBase
 {
     private ICharacterBehavior characterBehavior;
     
-    void Start ()
+    protected override void Start ()
     {
-        characterBehavior = new RandomMove();
+        base.Start();
+        characterBehavior = new MoveTowardsPlayer();
 	}
 
     void FixedUpdate ()
     {
-        characterBehavior.Move(this);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "Player")
+        if (!isCollision)
         {
-            Destroy(other.gameObject);
+            characterBehavior.Move(this);
         }
     }
 }

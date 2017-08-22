@@ -9,31 +9,6 @@ namespace Assets.Scripts
 {
     public static class Helper
     {
-        public static Vector3 GetDirectionByKeyboard()
-        {
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
-            {
-                return Vector3.forward;
-            }
-
-            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-            {
-                return Vector3.back;
-            }
-
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-            {
-                return Vector3.left;
-            }
-
-            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-            {
-                return Vector3.right;
-            }
-
-            return Vector3.zero;
-        }
-
         public static Vector3 GetRandomDirection()
         {
             int random = UnityEngine.Random.Range(0, 4);
@@ -53,72 +28,21 @@ namespace Assets.Scripts
             return Vector3.zero;
         }
 
-        public static void Rotate(MonoBehaviour gameObjectBehavior, Vector3 vector3, TypeOfVector3 typeOfVector)
+        public static Vector3 GetMaxPosition()
         {
-            switch (typeOfVector)
+            GameObject[] concreteWalls = GameObject.FindGameObjectsWithTag("Concrete");
+            float x = concreteWalls[0].transform.position.x;
+            float z = concreteWalls[0].transform.position.z;
+
+            foreach (var wall in concreteWalls)
             {
-                case TypeOfVector3.Direction:
-                    if (vector3 != Vector3.zero)
-                    {
-                        gameObjectBehavior.transform.rotation = Quaternion.LookRotation(vector3);
-                    }
-                    break;
-                case TypeOfVector3.NextPosition:
-                    gameObjectBehavior.transform.LookAt(vector3);
-                    break;
+                if (wall.transform.position.x > x)
+                    x = wall.transform.position.x;
+                if (wall.transform.position.z > z)
+                    z = wall.transform.position.z;
             }
-        }
 
-        public static bool CharacterCapsuleCast(MonoBehaviour gameObjectBehavior)
-        {
-            float castDistance = 0.1f;
-            int mask = (1 << 2);
-            CharacterController characterController = gameObjectBehavior.GetComponent<CharacterController>();
-            Vector3 point1 = gameObjectBehavior.transform.position + characterController.center + Vector3.up *
-                -characterController.height * 0.5f;
-            Vector3 point2 = point1 + Vector3.up * characterController.height;
-
-            point1.y += characterController.radius;
-            point2.y -= characterController.radius;
-
-            if (Physics.CapsuleCast(point1, point2, characterController.radius, 
-                gameObjectBehavior.transform.forward, castDistance, ~mask))
-                return true;
-
-            return false;
-        }
-
-        public static bool CharacterCapsuleCast(MonoBehaviour gameObjectBehavior, Vector3 direction)
-        {
-
-            float castDistance = 0.1f;
-            int mask = (1 << 2);
-            CharacterController characterController = gameObjectBehavior.GetComponent<CharacterController>();
-            Vector3 point1 = gameObjectBehavior.transform.position + characterController.center + Vector3.up *
-                -characterController.height * 0.5f;
-            Vector3 point2 = point1 + Vector3.up * characterController.height;
-
-            point1.y += characterController.radius;
-            point2.y -= characterController.radius;
-
-            if (Physics.CapsuleCast(point1, point2, characterController.radius, direction, castDistance, ~mask))
-                return true;
-
-            return false;
-        }
-
-        public enum TypeOfVector3
-        {
-            Direction,
-            NextPosition
-        }
-
-        public static void SetGameOverText()
-        {
-            StaticObjectsGeneratorBase objectsGenerator;
-            objectsGenerator = new StaticObjectsGenerator();
-            Canvas canvas = objectsGenerator.GetCanvas();
-            UnityEngine.Object.Instantiate(canvas);
+            return new Vector3(x, 0.0f, z);
         }
     }
 }

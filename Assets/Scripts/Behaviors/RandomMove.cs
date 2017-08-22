@@ -14,6 +14,7 @@ namespace Assets.Scripts.Behaviors
         private bool changeDirection = true, continueDirection = false;
         private Vector3 currentDirection, nextDirection;
         private Vector3 nextPosition;
+        private Animator animator;
 
         public bool CanMove(CharacterBase gameObjectBehavior)
         {
@@ -22,9 +23,12 @@ namespace Assets.Scripts.Behaviors
 
         public void Move(CharacterBase gameObjectBehavior)
         {
+            animator = gameObjectBehavior.gameObject.GetComponent<Animator>();
+
             if (CanMove(gameObjectBehavior))
             {
                 speed = gameObjectBehavior.GetSpeed();
+                animator.SetFloat("Speed", speed);
 
                 if (changeDirection)
                 {
@@ -89,12 +93,12 @@ namespace Assets.Scripts.Behaviors
 
         private bool CanMoveWithGivenDirection(MonoBehaviour gameObjectBehavior)
         {
-            return !Helper.CharacterCapsuleCast(gameObjectBehavior, nextDirection);
+            return !PhysicsHelper.CharacterSphereCast(gameObjectBehavior, nextDirection);
         }
 
         private void RotateAndMove(MonoBehaviour gameObjectBehavior)
         {
-            Helper.Rotate(gameObjectBehavior, nextDirection, Helper.TypeOfVector3.Direction);
+            PhysicsHelper.Rotate(gameObjectBehavior, nextDirection, Enums.TypeOfVector3.Direction);
             gameObjectBehavior.transform.Translate(nextDirection * Time.deltaTime * speed, Space.World);
         }
     }

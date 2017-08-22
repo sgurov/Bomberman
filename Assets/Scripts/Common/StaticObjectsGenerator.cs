@@ -25,21 +25,6 @@ namespace Assets.Scripts
             return (GameObject)Resources.Load("Walls/Floor", typeof(GameObject));
         }
 
-        public override Canvas GetCanvas()
-        {
-            return (Canvas)Resources.Load("UI/Canvas", typeof(Canvas));
-        }
-
-        public override GameObject GetBomb()
-        {
-            return (GameObject)Resources.Load("Bombs/Bomb", typeof(GameObject));
-        }
-
-        public override GameObject GetExplosion()
-        {
-            return (GameObject)Resources.Load("Effects/Explosion", typeof(GameObject));
-        }
-
         public override GameObject[] GetPowerups()
         {
             List<GameObject> result = new List<GameObject>();
@@ -50,26 +35,6 @@ namespace Assets.Scripts
             result.Add((GameObject)Resources.Load("Powerups/WallPass", typeof(GameObject)));
 
             return result.ToArray();
-        }
-
-        public override Canvas GetSpeedImage()
-        {
-            return (Canvas)Resources.Load("UI/SpeedPowerup", typeof(Canvas));
-        }
-
-        public override Canvas GetBombsImage()
-        {
-            return (Canvas)Resources.Load("UI/BombsPowerup", typeof(Canvas));
-        }
-
-        public override Canvas GetFlamesImage()
-        {
-            return (Canvas)Resources.Load("UI/FlamesPowerup", typeof(Canvas));
-        }
-
-        public override Canvas GetWallpassImage()
-        {
-            return (Canvas)Resources.Load("UI/WallpassPowerup", typeof(Canvas));
         }
     }
 }
