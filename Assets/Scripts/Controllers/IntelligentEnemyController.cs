@@ -7,8 +7,8 @@ using UnityEngine;
 
 public class IntelligentEnemyController : EnemyBase
 {
-    private Vector3 playerPosition;
-    private Vector3 nextPosition;
+    private Vector3 playerPosition, enemyPosition;
+    private Vector3 nextPosition = new Vector3(-1, 0, -1);
     private bool newPosition;
     private List<Node> path;
     private Node startNode, targetNode;
@@ -16,27 +16,19 @@ public class IntelligentEnemyController : EnemyBase
 	protected override void Start()
     {
         base.Start();
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        GameObject player = GetPlayer();
         if (player != null)
         {
             playerPosition = GetRoundPosition(player.transform.position);
+            enemyPosition = GetRoundPosition(transform.position);
             startNode = new Node(GetRoundPosition(transform.position));
             targetNode = new Node(playerPosition);
             path = new List<Node>();
-            animator.SetFloat("Speed", GetSpeed());
 
             PathFinding.FindPath(path, startNode, targetNode);
 
-            if (path.Count > 0)
-            {
-                nextPosition = path[0].position;
-                path.RemoveAt(0);
-            }
-            else
-            {
-                //Debug.LogError("Path wasn't found!");
-            }
-            newPosition = false;
+            SetNextPosition();
+            
         }
         else
         {
@@ -59,18 +51,18 @@ public class IntelligentEnemyController : EnemyBase
             }
             else
             {
-                if (path.Count > 0)
-                {
-                    nextPosition = path[0].position;
-                    path.RemoveAt(0);
-                }
-                newPosition = false;
+                SetNextPosition();
             }
         }
 
-        if (path != null && path.Count > 0)
+        if (path != null && path.Count > 0 && (nextPosition.x >= 0 && nextPosition.z >= 0))
         {
+            animator.SetFloat("Speed", GetSpeed());
             RotateAndMove();
+        }
+        else
+        {
+            animator.SetFloat("Speed", 0);
         }
 
         if (IsSamePositions(transform.position, nextPosition))
@@ -78,6 +70,13 @@ public class IntelligentEnemyController : EnemyBase
             newPosition = true;
             startNode = new Node(GetRoundPosition(transform.position));
             //CheckPlayerPosition();
+        }
+
+        Vector3 currentEnemyPosition = GetRoundPosition(transform.position);
+
+        if (currentEnemyPosition == enemyPosition)
+        {
+            newPosition = true;
         }
 
         CheckPlayerPosition();
@@ -124,8 +123,9 @@ public class IntelligentEnemyController : EnemyBase
 
     private void CheckPlayerPosition()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        GameObject player = GetPlayer();
         Vector3 currentPlayerPosition;
+
         if (player != null)
         {
             currentPlayerPosition = GetRoundPosition(player.transform.position);
@@ -134,12 +134,37 @@ public class IntelligentEnemyController : EnemyBase
             {
                 playerPosition = player.transform.position;
                 targetNode = new Node(GetRoundPosition(playerPosition));
+                path = new List<Node>();
                 PathFinding.FindPath(path, startNode, targetNode);
             }
         }
         else
         {
             Debug.LogError("Player wasn't found!");
+        }
+    }
+
+    private GameObject GetPlayer()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (var item in players)
+        {
+            if (item.name.Contains("Player"))
+            {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    private void SetNextPosition()
+    {
+        if (path.Count > 0)
+        {
+            nextPosition = path[0].position;
+            path.RemoveAt(0);
+            newPosition = false;
         }
     }
 

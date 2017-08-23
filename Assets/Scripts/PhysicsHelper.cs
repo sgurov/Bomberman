@@ -88,8 +88,8 @@ namespace Assets.Scripts
 
         public static bool CharacterSphereCast(MonoBehaviour gameObjectBehavior)
         {
-            float radius = 0.45f;
-            float castDistance = 0.1f;
+            float radius = 0.3f;
+            float castDistance = 0.2f;
             int mask = (1 << 2);
             RaycastHit rayCastHit;
 
@@ -109,8 +109,8 @@ namespace Assets.Scripts
 
         public static bool CharacterSphereCast(MonoBehaviour gameObjectBehavior, Vector3 direction)
         {
-            float radius = 0.45f;
-            float castDistance = 0.1f;
+            float radius = 0.3f;
+            float castDistance = 0.2f;
             int mask = (1 << 2);
             RaycastHit rayCastHit;
 

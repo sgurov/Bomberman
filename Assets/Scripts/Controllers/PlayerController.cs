@@ -51,8 +51,12 @@ namespace Assets.Scripts
             if (other.gameObject.tag == "Enemy")
             {
                 animator.SetFloat("Speed", 0);
-                dead = true;
-                StartCoroutine(DoDie());
+                
+                if (!dead)
+                {
+                    StartCoroutine(DoDie());
+                    dead = true;
+                }
             }
         }
 
