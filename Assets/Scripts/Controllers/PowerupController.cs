@@ -4,8 +4,9 @@ using Assets.Scripts.Common;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class PowerupController : MonoBehaviour
+public class PowerupController : NetworkBehaviour
 {
     private DynamicObjectsGeneratorBase dynamicObjects;
     private Canvas bombsPowerupInfo, flamesPowerupInfo, speedPowerupInfo, wallpassPowerupInfo;
@@ -15,6 +16,13 @@ public class PowerupController : MonoBehaviour
     void Start ()
     {
         Initialize();
+
+        GameObject[] powerups = GameObject.FindGameObjectsWithTag("PowerupInfo");
+
+        foreach (var powerup in powerups)
+        {
+            Destroy(powerup);
+        }
 	}
 	
 	// Update is called once per frame

@@ -82,19 +82,19 @@ namespace Assets.Scripts.Algorithms
 
             if (!Physics.Raycast(node.position, Vector3.forward, out raycastHit, castDistance))
                 neighbors.Add(new Node(node.position + Vector3.forward));
-            else if (raycastHit.collider.tag == "Player")
+            else if (raycastHit.collider.tag == "Player" || raycastHit.collider.tag == "Enemy")
                 neighbors.Add(new Node(node.position + Vector3.forward));
             if (!Physics.Raycast(node.position, Vector3.back, out raycastHit, castDistance))
                 neighbors.Add(new Node(node.position + Vector3.back));
-            else if (raycastHit.collider.tag == "Player")
+            else if (raycastHit.collider.tag == "Player" || raycastHit.collider.tag == "Enemy")
                 neighbors.Add(new Node(node.position + Vector3.back));
             if (!Physics.Raycast(node.position, Vector3.left, out raycastHit, castDistance))
                 neighbors.Add(new Node(node.position + Vector3.left));
-            else if (raycastHit.collider.tag == "Player")
+            else if (raycastHit.collider.tag == "Player" || raycastHit.collider.tag == "Enemy")
                 neighbors.Add(new Node(node.position + Vector3.left));
             if (!Physics.Raycast(node.position, Vector3.right, out raycastHit, castDistance))
                 neighbors.Add(new Node(node.position + Vector3.right));
-            else if (raycastHit.collider.tag == "Player")
+            else if (raycastHit.collider.tag == "Player" || raycastHit.collider.tag == "Enemy")
                 neighbors.Add(new Node(node.position + Vector3.right));
 
             return neighbors;

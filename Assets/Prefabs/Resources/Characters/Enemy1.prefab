@@ -126,7 +126,10 @@ GameObject:
   - component: {fileID: 4557239567954332}
   - component: {fileID: 95395593534755974}
   - component: {fileID: 54390596159033338}
-  - component: {fileID: 114843691149327874}
+  - component: {fileID: 114214754741735224}
+  - component: {fileID: 114022137974914430}
+  - component: {fileID: 114046454261270340}
+  - component: {fileID: 114287925534400414}
   m_Layer: 0
   m_Name: Enemy1
   m_TagString: Enemy
@@ -2156,7 +2159,79 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114843691149327874
+--- !u!114 &114022137974914430
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1119485703028914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 136
+    i1: 24
+    i2: 112
+    i3: 68
+    i4: 234
+    i5: 132
+    i6: 19
+    i7: 36
+    i8: 217
+    i9: 148
+    i10: 85
+    i11: 242
+    i12: 78
+    i13: 184
+    i14: 211
+    i15: 19
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
+--- !u!114 &114046454261270340
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1119485703028914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.04761905
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
+--- !u!114 &114214754741735224
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1119485703028914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1590678366, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Animator: {fileID: 95395593534755974}
+  m_ParameterSendBits: 3
+  param0: 
+  param1: 
+  param2: 
+  param3: 
+  param4: 
+  param5: 
+--- !u!114 &114287925534400414
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -2167,6 +2242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 785ece7dff5e40a42a0e28863893fb48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dead: 0
   stepSound: {fileID: 8300000, guid: 4437bc80104f4f84a9149c54a918b984, type: 3}
   attackSound: {fileID: 8300000, guid: 5754ecc8dabb944f09b207e0a7fca341, type: 3}
   tauntSound: {fileID: 8300000, guid: 5a6551ff909944ce8809e20088d81d33, type: 3}

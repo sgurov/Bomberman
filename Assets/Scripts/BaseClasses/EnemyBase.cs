@@ -32,13 +32,13 @@ namespace Assets.Scripts
         {
             if (other.gameObject.tag == "Player")
             {
-                animator.SetFloat("Speed", 0);
+                networkAnimator.animator.SetFloat("Speed", 0);
                 isCollision = true;
-                animator.SetTrigger("Attack");
+                networkAnimator.SetTrigger("Attack");
                 //Destroy(other.transform.parent.gameObject, 2);
             }
         }
-
+        
         protected virtual void PlayAttackSound()
         {
             audioSource.PlayOneShot(attackSound);

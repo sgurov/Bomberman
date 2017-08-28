@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.BaseClasses;
 using Assets.Scripts.Common;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,7 +26,7 @@ namespace Assets.Scripts
             GenerateGameField();
 
             //AddPlayerToField();
-            //AddEnemyToField();
+            StartCoroutine(AddEnemyToField());
         }
 
         void Update()
@@ -37,8 +38,8 @@ namespace Assets.Scripts
             GenerateFloor();
             GenerateBorders();
             GenerateConcreteWalls();
-            //GenerateBrickWalls();
-            //GeneratePowerups();
+            GenerateBrickWalls();
+            GeneratePowerups();
         }
 
         private void GenerateBorders()
@@ -58,7 +59,7 @@ namespace Assets.Scripts
                         Vector3 position = new Vector3(i, wallOffset, j);
                         var gameObject = Instantiate(concreteWall, position, Quaternion.identity);
                         NetworkServer.Spawn(gameObject);
-                        GameFieldManager.fieldMatrix[i, j] = (int)Enums.FieldState.Filled;
+                        field[i, j] = (int)Enums.FieldState.Filled;
                     }
                 }
             }
@@ -87,13 +88,12 @@ namespace Assets.Scripts
                     int row = random.Next(0, rowCount);
                     int column = random.Next(0, columnCount);
 
-                    if (!IsConcreteWall(row, column) && GameFieldManager.fieldMatrix[column, row] == 
-                        (int)Enums.FieldState.Empty)
+                    if (!IsConcreteWall(row, column) && field[column, row] == (int)Enums.FieldState.Empty)
                     {
                         var gameObject = Instantiate(brickWall, new Vector3(column, wallOffset, row),
                             Quaternion.identity);
                         NetworkServer.Spawn(gameObject);
-                        GameFieldManager.fieldMatrix[column, row] = (int)Enums.FieldState.Filled;
+                        field[column, row] = (int)Enums.FieldState.Filled;
                         break;
                     }
                 }
@@ -139,7 +139,7 @@ namespace Assets.Scripts
                     int row = random.Next(0, rowCount);
                     int column = random.Next(0, columnCount);
 
-                    if (!IsConcreteWall(row, column) && GameFieldManager.fieldMatrix[column, row] == 
+                    if (!IsConcreteWall(row, column) && field[column, row] == 
                         (int)Enums.FieldState.Filled)
                     {
                         var gameObject = Instantiate(powerup, new Vector3(column, wallOffset, row), 
@@ -158,19 +158,20 @@ namespace Assets.Scripts
 
         private void AddPlayerToField()
         {
-            Vector3 position = GameFieldManager.GeneratePlayerPosition();
+            //Vector3 position = GameFieldManager.GeneratePlayerPosition();
             //Vector3 position = new Vector3(0.0f, 0.0f, 0.0f);
 
-            player = dynamicObjects.GetPlayer();
+            //player = dynamicObjects.GetPlayer();
 
             //position.y += player.transform.lossyScale.y;
 
-            var gameObject = Instantiate(player, position, Quaternion.identity);
-            NetworkServer.Spawn(gameObject);
+            //var gameObject = Instantiate(player, position, Quaternion.identity);
+            //NetworkServer.Spawn(gameObject);
         }
 
-        private void AddEnemyToField()
+        private IEnumerator AddEnemyToField()
         {
+            yield return new WaitForSeconds(1);
             Vector3 position = GenerateEnemyPosition();
             enemy = dynamicObjects.GetEnemy();
             //Vector3 position = new Vector3(columnCount - 1, 0.0f, rowCount - 1);
@@ -189,13 +190,13 @@ namespace Assets.Scripts
                 int column = random.Next(0, columnCount);
                 int row = random.Next(0, rowCount);
 
-                if (GameFieldManager.fieldMatrix[column, row] == (int)Enums.FieldState.Empty)
+                if (field[column, row] == (int)Enums.FieldState.Empty)
                 {
                     Vector3 position = new Vector3(column, 0.0f, row); 
 
                     //position.y += enemy.transform.lossyScale.y;
 
-                    GameFieldManager.fieldMatrix[column, row] = (int)Enums.FieldState.Enemy;
+                    field[column, row] = (int)Enums.FieldState.Enemy;
                     return position;
 
                 }

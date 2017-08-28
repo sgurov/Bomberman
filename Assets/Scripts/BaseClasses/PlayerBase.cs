@@ -20,7 +20,8 @@ namespace Assets.Scripts
         public AudioClip dropBombSound;
         public AudioClip deathSound;
         public AudioClip powerupSound;
-
+        private NetworkAnimator netAnimator;
+        
         public void AddPowerup(GameObject powerup)
         {
             powerups.Add(powerup);
@@ -37,7 +38,7 @@ namespace Assets.Scripts
                 else if (name.Contains("Speed"))
                 {
                     speed = (int)Enums.Speed.Fast;
-                    animator.SetFloat("Speed", speed);
+                    networkAnimator.animator.SetFloat("Speed", speed);
                 }
                 else if (name.Contains("Flames"))
                     explosionDistance += 1.0f;
@@ -94,7 +95,12 @@ namespace Assets.Scripts
             {
                 PlayPowerupSound();
                 AddPowerup(other.gameObject);
-                other.gameObject.SetActive(false);
+                
+                //other.gameObject.SetActive(false);
+                if (isClient)
+                {
+                    CmdHidePowerup(other.transform.name);
+                }
                 SetPlayerPowerups();
             }
         }
@@ -115,6 +121,7 @@ namespace Assets.Scripts
 
             StartCoroutine(Exploder.Explode(this, bombObject, explosionDelay, GetExplosionDistance(),
                 DestroyExplodedObjects));
+            
         }
 
         protected void DestroyExplodedObjects(RaycastHit[] objects)
@@ -125,9 +132,15 @@ namespace Assets.Scripts
                 {
                     case "Player":
                         //GameObject.Destroy(item.transform.gameObject);
-                        animator.SetTrigger("Death");
-                        animator.SetFloat("Speed", 0);
-                        dead = true;
+                        if (!item.transform.GetComponent<PlayerBase>().dead)
+                        {
+                            netAnimator = item.transform.GetComponent<NetworkAnimator>();
+                            netAnimator.animator.SetFloat("Speed", 0);
+                            item.transform.GetComponent<PlayerBase>().dead = true;
+                            netAnimator.SetTrigger("Death");
+                            netAnimator.animator.ResetTrigger("Death");
+                        }
+                        //dead = true;
                         break;
                     case "Enemy":
                         GameObject.Destroy(item.transform.gameObject);
@@ -136,6 +149,32 @@ namespace Assets.Scripts
                         GameObject.Destroy(item.transform.gameObject);
                         break;
                 }
+            }
+        }
+
+        [Command]
+
+        void CmdHidePowerup(string name)
+        {
+            GameObject powerup = GameObject.Find(name);
+
+            if (powerup != null)
+            {
+                powerup.SetActive(false);
+            }
+
+            RpcHidePowerup(name);
+        }
+
+        [ClientRpc]
+
+        void RpcHidePowerup(string name)
+        {
+            GameObject powerup = GameObject.Find(name);
+
+            if (powerup != null)
+            {
+                powerup.SetActive(false);
             }
         }
     }

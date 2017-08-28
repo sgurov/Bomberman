@@ -127,6 +127,8 @@ GameObject:
   - component: {fileID: 4525759131511822}
   - component: {fileID: 114197548765205488}
   - component: {fileID: 135856623479634980}
+  - component: {fileID: 114364098660393002}
+  - component: {fileID: 114803990969436520}
   m_Layer: 2
   m_Name: Bombs
   m_TagString: Powerup
@@ -209,7 +211,7 @@ Transform:
   m_GameObject: {fileID: 1978475319153748}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_Children:
   - {fileID: 4036057362778994}
   - {fileID: 4021827135257134}
@@ -487,6 +489,59 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83252d3462cfde545b54647b20bb5a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114364098660393002
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1978475319153748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 252
+    i1: 157
+    i2: 81
+    i3: 191
+    i4: 71
+    i5: 254
+    i6: 126
+    i7: 116
+    i8: 8
+    i9: 141
+    i10: 71
+    i11: 22
+    i12: 241
+    i13: 163
+    i14: 186
+    i15: 213
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
+--- !u!114 &114803990969436520
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1978475319153748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!135 &135169071441193932
 SphereCollider:
   m_ObjectHideFlags: 1

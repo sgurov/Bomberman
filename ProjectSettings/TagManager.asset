@@ -8,6 +8,8 @@ TagManager:
   - Brick
   - Powerup
   - Concrete
+  - SmallImage
+  - PowerupInfo
   layers:
   - Default
   - TransparentFX

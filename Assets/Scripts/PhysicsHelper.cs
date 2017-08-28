@@ -96,7 +96,7 @@ namespace Assets.Scripts
             Vector3 point = gameObjectBehavior.transform.position;
             point.x = (float)Math.Round(point.x, 1);
             point.z = (float)Math.Round(point.z, 1);
-            point.y = radius;
+            point.y = radius * 2.0f;
 
             if (Physics.SphereCast(point, radius, gameObjectBehavior.transform.forward, out rayCastHit,
                 castDistance, ~mask))

@@ -14,7 +14,7 @@ public class EnemyController : EnemyBase
     protected override void Start ()
     {
         base.Start();
-        characterBehavior = new MoveTowardsPlayer();
+        characterBehavior = new RandomMove();
 	}
 
     void FixedUpdate ()

@@ -13,11 +13,15 @@ namespace Assets.Scripts.BaseClasses
         protected int columnCount = 9;
         protected int rowCount = 11;
         protected int brickWallsCount = 20;
-        public int[,] field;
+
+        protected int[,] field;
 
         public GameFieldBase()
         {
-            GameFieldManager.fieldMatrix = new int[columnCount, rowCount];
+            //GameFieldManager.fieldMatrix = new int[columnCount, rowCount];
+            field = new int[columnCount, rowCount];
+            field[0, 0] = (int)Enums.FieldState.Player;
+            field[1, 0] = (int)Enums.FieldState.Player;
         }
 
         public abstract void GenerateGameField();

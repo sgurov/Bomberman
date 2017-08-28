@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts
 {
@@ -18,7 +19,6 @@ namespace Assets.Scripts
         {
             base.Start();
             characterBehavior = new SimpleKeyboardMove();
-            transform.position = GameFieldManager.GeneratePlayerPosition();
         }
 
         private void Update()
@@ -32,8 +32,14 @@ namespace Assets.Scripts
             {
                 if (GetBombs() > 0 && !dead)
                 {
-                    DropBomb();
-                    animator.SetTrigger("DropBomb");
+                    //DropBomb();
+                    networkAnimator.animator.SetTrigger("DropBomb");
+                    
+                    if (isClient)
+                    {
+                        CmdDropBomb();
+                    }
+
                     ReduceBombsCount();
                 }
             }
@@ -57,11 +63,16 @@ namespace Assets.Scripts
 
         protected override void OnTriggerEnter(Collider other)
         {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+
             base.OnTriggerEnter(other);
 
             if (other.gameObject.tag == "Enemy")
             {
-                animator.SetFloat("Speed", 0);
+                networkAnimator.animator.SetFloat("Speed", 0);
                 dead = true;
                 StartCoroutine(DoDie());
             }
@@ -75,7 +86,8 @@ namespace Assets.Scripts
         private IEnumerator DoDie()
         {
             yield return new WaitForSeconds(1);
-            animator.SetTrigger("Death");
+            networkAnimator.SetTrigger("Death");
+            networkAnimator.animator.ResetTrigger("Death");
         }
 
         protected override void PlayStepSound()
@@ -86,6 +98,21 @@ namespace Assets.Scripts
         protected override void PlayDeathSound()
         {
             base.PlayDeathSound();
+        }
+
+        [Command]
+
+        void CmdDropBomb()
+        {
+            DropBomb();
+            RpcDropBomb();
+        }
+
+        [ClientRpc]
+
+        void RpcDropBomb()
+        {
+            DropBomb();
         }
     }
 }

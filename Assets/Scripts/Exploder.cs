@@ -20,28 +20,20 @@ namespace Assets.Scripts
             GameObject explosion = dynamicObjects.GetExplosion();
             GameObject gameObject = UnityEngine.Object.Instantiate(explosion, explosionSource.transform.position, 
                 Quaternion.identity);
-            if (playerBehavior.isClient)
+
+            if (playerBehavior.isServer)
             {
-                CmdSpawnExplosion(gameObject, explosionSource.transform.position);
+                NetworkServer.Spawn(gameObject);
             }
+
             GameObject.Destroy(explosionSource);
-            RaycastHit[] rayCastHits = GetHits(explosionSource, explosionDistance);
+            RaycastHit[] rayCastHits = GetHits(explosionSource.transform.position, explosionDistance);
             callBack(rayCastHits);
             yield return new WaitForSeconds(explosionDelay);
             GameObject.Destroy(gameObject);
         }
 
-        [Command]
-
-        private static void CmdSpawnExplosion(GameObject explosion, Vector3 position)
-        {
-            UnityEngine.Object.Instantiate(explosion, position, Quaternion.identity);
-            
-            NetworkServer.Spawn(explosion);
-            
-        }
-
-        private static RaycastHit[] GetHits(GameObject bomb, float distance)
+        public static RaycastHit[] GetHits(Vector3 position, float distance)
         {
             List<Vector3> directions = new List<Vector3>();
             List<RaycastHit> result = new List<RaycastHit>();
@@ -53,13 +45,13 @@ namespace Assets.Scripts
 
             foreach (var direction in directions)
             {
-                RaycastHit[] rayCastHits = Physics.RaycastAll(bomb.transform.position, direction, distance);
+                RaycastHit[] rayCastHits = Physics.RaycastAll(position, direction, distance);
                 result.AddRange(rayCastHits);
             }
 
             RaycastHit rayCastHit;
 
-            if (Physics.Raycast(bomb.transform.position + Vector3.forward, Vector3.back, out rayCastHit, 1.0f))
+            if (Physics.Raycast(position + Vector3.forward, Vector3.back, out rayCastHit, 1.0f))
             {
                 result.Add(rayCastHit);
             }

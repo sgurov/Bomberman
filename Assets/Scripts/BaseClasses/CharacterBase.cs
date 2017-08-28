@@ -6,8 +6,8 @@ namespace Assets.Scripts.BaseClasses
     public abstract class CharacterBase : NetworkBehaviour
     {
         protected int speed = (int)Enums.Speed.Normal;
-        protected Animator animator;
-        protected bool dead = false;
+        protected NetworkAnimator networkAnimator;
+        public bool dead = false;
         public AudioClip stepSound;
         protected AudioSource audioSource;
 
@@ -17,7 +17,7 @@ namespace Assets.Scripts.BaseClasses
 
         protected virtual void Start()
         {
-            animator = GetComponent<Animator>();
+            networkAnimator = GetComponent<NetworkAnimator>();
             audioSource = GetComponentInChildren<AudioSource>();
         }
 
