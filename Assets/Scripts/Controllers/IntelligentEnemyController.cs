@@ -9,7 +9,9 @@ using UnityEngine.Networking;
 
 public class IntelligentEnemyController : EnemyBase
 {
+    [SyncVar]
     private Vector3 playerPosition, enemyPosition;
+    [SyncVar]
     private Vector3 nextPosition = new Vector3(-1, 0, -1);
     //private bool newPosition;
     private List<Node> path;
@@ -52,19 +54,9 @@ public class IntelligentEnemyController : EnemyBase
 
         if (isCollision)
         {
-            GameObject player = GetPlayer();
-            if (player != null)
-            {
-                networkAnimator.SetTrigger("Idle");
-                startNode = new Node(transform.position);
-                targetNode = new Node(player.transform.position);
-                path = new List<Node>();
-                isCollision = false;
-            }
-            else
-            {
-                return;
-            }
+            //StartCoroutine(SearchOtherPlayers());
+            SearchOtherPlayers();
+            return;
         }
 
         if (path == null || path.Count == 0)
@@ -79,6 +71,7 @@ public class IntelligentEnemyController : EnemyBase
         if (path != null && path.Count > 0 && (nextPosition.x >= 0 && nextPosition.z >= 0))
         {
             networkAnimator.animator.SetFloat("Speed", GetSpeed());
+
             RpcRotateAndMove();
         }
         else
@@ -244,5 +237,24 @@ public class IntelligentEnemyController : EnemyBase
     private double GetDistance(Vector3 start, Vector3 target)
     {
         return Math.Abs(start.x - target.x) + Math.Abs(start.z - target.z);
+    }
+
+    private void SearchOtherPlayers()
+    {
+        //yield return new WaitForFixedUpdate();
+
+        GameObject player = GetPlayer();
+
+        if (player != null)
+        {
+            startNode = new Node(GetRoundPosition(transform.position));
+            targetNode = new Node(GetRoundPosition(player.transform.position));
+            path = new List<Node>();
+            isCollision = false;
+        }
+        else
+        {
+            networkAnimator.SetTrigger("Taunt");
+        }
     }
 }
