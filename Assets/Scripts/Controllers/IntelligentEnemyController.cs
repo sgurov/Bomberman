@@ -9,13 +9,15 @@ using UnityEngine.Networking;
 
 public class IntelligentEnemyController : EnemyBase
 {
-    [SyncVar]
+    //[SyncVar]
     private Vector3 playerPosition, enemyPosition;
-    [SyncVar]
+    //[SyncVar]
     private Vector3 nextPosition = new Vector3(-1, 0, -1);
     //private bool newPosition;
     private List<Node> path;
     private Node startNode, targetNode;
+    private bool doingNothing = false;
+    private float delaySeconds = 3.0f;
 
     protected override void Start()
     {
@@ -47,15 +49,15 @@ public class IntelligentEnemyController : EnemyBase
 
 	void FixedUpdate()
     {
-        if (!isServer)
+        if (isCollision && isServer && !doingNothing)
         {
-            return;
+            StartCoroutine(SearchOtherPlayers());
+            //return;
+            //SearchOtherPlayers();
         }
 
-        if (isCollision)
+        if (!isServer || doingNothing)
         {
-            //StartCoroutine(SearchOtherPlayers());
-            SearchOtherPlayers();
             return;
         }
 
@@ -87,7 +89,7 @@ public class IntelligentEnemyController : EnemyBase
         }
     }
 
-    [ClientRpc]
+    //[ClientRpc]
     private void RpcRotateAndMove()
     {
         transform.LookAt(nextPosition);
@@ -219,10 +221,13 @@ public class IntelligentEnemyController : EnemyBase
         {
             if (item.transform.name.Contains("Player"))
             {
-                if (item.transform.GetComponent<PlayerBase>().dead)
+                bool isDead = item.transform.GetComponent<PlayerBase>().isDead;
+                
+                if (isDead)
                 {
                     continue;
                 }
+
                 if (GetDistance(transform.position, item.transform.position) < minDistance)
                 {
                     minDistance = GetDistance(transform.position, item.transform.position);
@@ -239,10 +244,11 @@ public class IntelligentEnemyController : EnemyBase
         return Math.Abs(start.x - target.x) + Math.Abs(start.z - target.z);
     }
 
-    private void SearchOtherPlayers()
+    private IEnumerator SearchOtherPlayers()
     {
-        //yield return new WaitForFixedUpdate();
-
+        doingNothing = true;
+        yield return new WaitForSeconds(delaySeconds);
+        
         GameObject player = GetPlayer();
 
         if (player != null)
@@ -251,6 +257,7 @@ public class IntelligentEnemyController : EnemyBase
             targetNode = new Node(GetRoundPosition(player.transform.position));
             path = new List<Node>();
             isCollision = false;
+            doingNothing = false;
         }
         else
         {

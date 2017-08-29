@@ -30,11 +30,21 @@ namespace Assets.Scripts
 
         protected void OnTriggerEnter(Collider other)
         {
+            if (!isServer)
+            {
+                return;
+            }
+
             if (other.gameObject.tag == "Player")
             {
-                networkAnimator.animator.SetFloat("Speed", 0);
-                isCollision = true;
-                networkAnimator.SetTrigger("Attack");
+                if (!other.gameObject.GetComponentInParent<PlayerBase>().isDead)
+                {
+                    networkAnimator.animator.SetFloat("Speed", 0);
+                    isCollision = true;
+                    other.gameObject.GetComponentInParent<PlayerBase>().isDead = true;
+                    other.gameObject.GetComponentInChildren<MeshCollider>().isTrigger = false;
+                    networkAnimator.SetTrigger("Attack");
+                }
                 //Destroy(other.transform.parent.gameObject, 2);
             }
         }

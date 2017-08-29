@@ -7,7 +7,8 @@ namespace Assets.Scripts.BaseClasses
     {
         protected int speed = (int)Enums.Speed.Normal;
         protected NetworkAnimator networkAnimator;
-        public bool dead = false;
+        //[SyncVar]
+        public bool isDead = false;
         public AudioClip stepSound;
         protected AudioSource audioSource;
 

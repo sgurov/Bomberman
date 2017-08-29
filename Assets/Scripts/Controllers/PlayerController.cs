@@ -30,7 +30,7 @@ namespace Assets.Scripts
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                if (GetBombs() > 0 && !dead)
+                if (GetBombs() > 0 && !isDead)
                 {
                     //DropBomb();
                     networkAnimator.animator.SetTrigger("DropBomb");
@@ -52,7 +52,7 @@ namespace Assets.Scripts
                 return;
             }
 
-            if (!dead)
+            if (!isDead)
             {
                 Vector3 position = transform.position;
                 position.y = 0;
@@ -73,7 +73,8 @@ namespace Assets.Scripts
             if (other.gameObject.tag == "Enemy")
             {
                 networkAnimator.animator.SetFloat("Speed", 0);
-                dead = true;
+                isDead = true;
+                gameObject.GetComponentInChildren<MeshCollider>().isTrigger = false;
                 StartCoroutine(DoDie());
             }
         }
@@ -88,6 +89,8 @@ namespace Assets.Scripts
             yield return new WaitForSeconds(1);
             networkAnimator.SetTrigger("Death");
             networkAnimator.animator.ResetTrigger("Death");
+            //this.gameObject.SetActive(false);
+            //Destroy(this, 3);
         }
 
         protected override void PlayStepSound()

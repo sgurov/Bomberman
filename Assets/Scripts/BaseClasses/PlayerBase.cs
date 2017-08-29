@@ -132,11 +132,11 @@ namespace Assets.Scripts
                 {
                     case "Player":
                         //GameObject.Destroy(item.transform.gameObject);
-                        if (!item.transform.GetComponent<PlayerBase>().dead)
+                        if (!item.transform.GetComponent<PlayerBase>().isDead)
                         {
                             netAnimator = item.transform.GetComponent<NetworkAnimator>();
                             netAnimator.animator.SetFloat("Speed", 0);
-                            item.transform.GetComponent<PlayerBase>().dead = true;
+                            item.transform.GetComponent<PlayerBase>().isDead = true;
                             netAnimator.SetTrigger("Death");
                             netAnimator.animator.ResetTrigger("Death");
                         }
